@@ -90,8 +90,8 @@ void paiguta(char *Rg1, char *Rg2, char L) {
 	int pos1 = vanimBit(*Rg1, L);
 	int pos2 = vanimBit(*Rg2, L);
 	printf("pos1 %d pos2 %d\n", pos1, pos2);
-	korista(Rg1, L);
-	korista(Rg2, L);
+	//korista(Rg1, L);
+	//korista(Rg2, L);
 	if (pos1 > pos2) {
 		*Rg2 <<= pos1-pos2;
 	} else {
@@ -115,28 +115,28 @@ int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
 	printf("\n********* JAGATAKSE ARVUD %s / %d JA %s / %d *********\n\n", bitid(Rg1, L), Rg1, bitid(Rg2, L), Rg2);
 	
 	if (onTaiendkood(Rg1, L) || onTaiendkood(Rg2, L)) {
-		printf("- Kuna v2hemalt yks arvudest on t2iendkoodis, j2tan meelde?.\n");
-		//*Rg3 = ~0;
+		printf("- v2hemalt yks arvudest on t2iendkoodis\n");
+		//*Rg3 = ~0x3f;
 	} else {
-		printf("- M6lemad arvud on otsekoodis.\n");
+		printf("- m6lemad arvud on otsekoodis\n");
 	}
 	
 	// 1. Sättida Rg1 ja Rg2 vanimad bitid kohakuti.
+	printf("- vastus peaks tulema: %s / %d jääk: %s / %d\n\n", bitid(Rg1/Rg2, L), Rg1/Rg2, bitid(Rg1-Rg1/Rg2*Rg2, L), Rg1-Rg1/Rg2*Rg2);
 	paiguta(&Rg1, &Rg2, L);
 	printf("Rg1 : %s / %d\n", bitid(Rg1, L), Rg1);
 	printf("Rg2 : %s / %d\n", bitid(Rg2, L), Rg2);
-	printf("- vastus peaks tulema: %s / %d jääk: %s / %d\n\n", bitid(Rg1/Rg2, L), Rg1/Rg2, bitid(Rg1-Rg1/Rg2*Rg2, L), Rg1-Rg1/Rg2*Rg2);
 	
 	
 	
 	for (i=0; /**jaak < Rg2 &&*/ i<L; i++) {
 		
 		// 2. Arvutada jääk = (Rg1 - Rg2)
-		if (Rg2 > Rg1) {
+		/*if (Rg2 > Rg1) {
 			Rg2 >>= 1;
-		}
+		}*/
 		*jaak = Rg1 - Rg2;
-		korista(jaak, L);
+		//korista(jaak, L);
 		printf("--------------------  %d. ITERATSIOON :\n", i+1);
 		printf("> Rg1 : %s / %d\n", bitid(Rg1, L), Rg1);
 		printf("> Rg2 : %s / %d\n", bitid(Rg2, L), Rg2);
@@ -147,29 +147,33 @@ int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
 			Rg1 = *jaak;
 			printf("- viimane bit k6rgeks:\n");
 			printf("  Rg3: %s / %d\n", bitid(*Rg3, L), *Rg3);
-		} else {/*
+		}/* else {
 			*Rg3 &= 0xFE;
 			printf("- viimane bit madalaks:\n");
-			printf("  Rg3: %s / %d\n", bitid(*Rg3, L), *Rg3);*/
-		}
+			printf("  Rg3: %s / %d\n", bitid(*Rg3, L), *Rg3);
+		}*/
 		
-		if (Rg2 > Rg1) {
-			printf(">>>L6PP\n\n");
-			break;
-		}
+		
 		
 		// 4. Nihutada Rg1 ühe võrra vasakule
 		//Rg1 <<= 1;
 		// 5. Nihutada Rg3 ühe võrra vasakule
-		*Rg3 <<= 1;
 		
-		korista(&Rg1, L);
-		korista(Rg3, L);
+		*Rg3 <<= 1;
+		if (Rg2 > Rg1) {
+			printf(">>>L6PP\n\n");
+			break;
+		}
+		//korista(&Rg1, L);
+		//korista(Rg3, L);
 		printf("- nihked tehtud:\n");
 		printf("  Rg1: %s / %d\n", bitid(Rg1, L), Rg1);
 		printf("  Rg3: %s / %d\n\n", bitid(*Rg3, L), *Rg3);
 		
 	}
+	
+	printf("\nJAGATIS: %s / %d\n", bitid(*Rg3, L), *Rg3);
+	printf("   J22K: %s / %d\n\n", bitid(*jaak, L), *jaak);
 }
 
 
@@ -190,14 +194,12 @@ int main(char* args[]) {
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
-	jaga(-29, 4, &jagatis, &jaak, L);
-	printf("\nJAGATIS: %s / %d\n", bitid(jagatis, L), jagatis);
-	printf("   J22K: %s / %d\n\n", bitid(jaak, L), jaak);
+	//jaga(-29, 4, &jagatis, &jaak, L);
+	//printf("\nJAGATIS: %s / %d\n", bitid(jagatis, L), jagatis);
+	//printf("   J22K: %s / %d\n\n", bitid(jaak, L), jaak);
 	
-	jaga(19, -8, &jagatis, &jaak, L);
-	printf("\nJAGATIS: %s / %d\n", bitid(jagatis, L), jagatis);
-	printf("   J22K: %s / %d\n\n", bitid(jaak, L), jaak);
-	
+	jaga(29, 4, &jagatis, &jaak, L);
+	jaga(19, 8, &jagatis, &jaak, L);
 	//for(;getchar()!='\n';);
 	return 0;
 }

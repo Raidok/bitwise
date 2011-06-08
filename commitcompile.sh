@@ -23,7 +23,7 @@ then
  a=$(gcc jagaja.c 2>&1)
  if [ -z "$a" ]
  then
-  b=$(git commit -m "$2" 2>&1)
+  b=$(git commit -a -m "$2" 2>&1)
   echo "GIT TEATAB:"
   echo $b
   ./a.out
