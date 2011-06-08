@@ -21,8 +21,8 @@
  * kontrollib, kas arv on täiendkoodis
  * ette tuleb anda arv ning kasutatavate bittide arv
  */
-int onTaiendkood(unsigned char Rg, unsigned char L) {
-	unsigned char esimene = 0x01<<L-1; // seatakse viimane bit üheks ja nihutatakse seda vajalik arv kordi vasakule
+int onTaiendkood(char Rg, char L) {
+	char esimene = 0x01<<L-1; // seatakse viimane bit üheks ja nihutatakse seda vajalik arv kordi vasakule
 	return Rg & esimene ? TRUE : FALSE;
 }
 
@@ -31,9 +31,9 @@ int onTaiendkood(unsigned char Rg, unsigned char L) {
 /**
  * sätib üleliigsed vanemad bitid nullideks
  */
-void korista(unsigned char *Rg, unsigned char L) {
-	unsigned char bit1 = 0x80;
-	unsigned char bit = 0x7F;
+void korista(char *Rg, char L) {
+	char bit1 = 0x80;
+	char bit = 0x7F;
 	int i;
 	for (i = 0; i<sizeof(char)*8-L; i++) {
 		*Rg &= bit;
@@ -49,8 +49,8 @@ void korista(unsigned char *Rg, unsigned char L) {
  * tagastab bittide stringi
  * ette tuleb anda arv ning kasutatavate bittide arv
  */
-char *bitid(unsigned char Rg, unsigned char L) {
-	unsigned char bit = 0x01<<L-1;
+char *bitid(char Rg, char L) {
+	char bit = 0x01<<L-1;
 	int i;
 	char *bitid;
 	korista(&Rg, L);
@@ -69,12 +69,12 @@ char *bitid(unsigned char Rg, unsigned char L) {
  * selgitab välja vanima kõrge biti
  * ette tuleb anda arv, mida uurima hakatakse
  */
-int vanimBit(unsigned char Rg, unsigned char L) {
-	unsigned char bit = 0x01<<L-1;
+int vanimBit(char Rg, char L) {
+	char bit = 0x01<<L-1;
 	int i;
 	for (i = L-1; i >= 0; i--) {
 		if (Rg & bit) {
-			 break;
+			break;
 		}
 		bit >>= 1;
 	}
@@ -86,17 +86,17 @@ int vanimBit(unsigned char Rg, unsigned char L) {
 /**
  * paigutab arvude kõrgeimad bitid kohakuti
  */
-void paiguta(unsigned char *Rg1, unsigned char *Rg2, unsigned char L) {
+void paiguta(char *Rg1, char *Rg2, char L) {
 	int pos1 = vanimBit(*Rg1, L);
 	int pos2 = vanimBit(*Rg2, L);
-	//printf("pos1 %d pos2 %d\n", pos1, pos2);
+	printf("pos1 %d pos2 %d\n", pos1, pos2);
+	korista(Rg1, L);
+	korista(Rg2, L);
 	if (pos1 > pos2) {
 		*Rg2 <<= pos1-pos2;
 	} else {
 		*Rg2 >>= pos2-pos1;
 	}
-	korista(Rg1, L);
-	korista(Rg2, L);
 }
 
 
@@ -104,22 +104,21 @@ void paiguta(unsigned char *Rg1, unsigned char *Rg2, unsigned char L) {
 /**
  * jagamist teostav algoritm
  */
-int jaga(unsigned char Rg1, unsigned char Rg2, unsigned char *Rg3, unsigned char *jaak, unsigned char L) {
-	unsigned char t;
+int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
+	char t;
 	int i;
 	
 	// algväärtustamine
 	*Rg3 = 0;
 	*jaak = 0;
 	
-	printf("Rg1 : %s / %d\n", bitid(Rg1, L), Rg1);
-	printf("Rg2 : %s / %d\n", bitid(Rg2, L), Rg2);
+	printf("\n********* JAGATAKSE ARVUD %s / %d JA %s / %d *********\n\n", bitid(Rg1, L), Rg1, bitid(Rg2, L), Rg2);
 	
 	if (onTaiendkood(Rg1, L) || onTaiendkood(Rg2, L)) {
-		printf("- Kuna v2hemalt yks arvudest on t2iendkoodis, t2idan Rg3-e yhtedega.\n");
+		printf("- Kuna v2hemalt yks arvudest on t2iendkoodis, j2tan meelde?.\n");
 		//*Rg3 = ~0;
 	} else {
-		printf("- M6lemad arvud on otsekoodis, j2tkan.\n");
+		printf("- M6lemad arvud on otsekoodis.\n");
 	}
 	
 	// 1. Sättida Rg1 ja Rg2 vanimad bitid kohakuti.
@@ -130,11 +129,12 @@ int jaga(unsigned char Rg1, unsigned char Rg2, unsigned char *Rg3, unsigned char
 	
 	
 	
-	for (i=0; *jaak < Rg2 && i<L; i++) {
-	
-		paiguta(&Rg1, &Rg2, L);
+	for (i=0; /**jaak < Rg2 &&*/ i<L; i++) {
 		
 		// 2. Arvutada jääk = (Rg1 - Rg2)
+		if (Rg2 > Rg1) {
+			Rg2 >>= 1;
+		}
 		*jaak = Rg1 - Rg2;
 		korista(jaak, L);
 		printf("--------------------  %d. ITERATSIOON :\n", i+1);
@@ -151,6 +151,11 @@ int jaga(unsigned char Rg1, unsigned char Rg2, unsigned char *Rg3, unsigned char
 			*Rg3 &= 0xFE;
 			printf("- viimane bit madalaks:\n");
 			printf("  Rg3: %s / %d\n", bitid(*Rg3, L), *Rg3);*/
+		}
+		
+		if (Rg2 > Rg1) {
+			printf(">>>L6PP\n\n");
+			break;
 		}
 		
 		// 4. Nihutada Rg1 ühe võrra vasakule
@@ -173,7 +178,7 @@ int jaga(unsigned char Rg1, unsigned char Rg2, unsigned char *Rg3, unsigned char
  * peaprogramm
  */
 int main(char* args[]) {
-	unsigned char jagatis, jaak, L=6;
+	char jagatis, jaak, L=6;
 	
 	printf("--------------------------------------------------------------------------------\n");
 	
@@ -189,6 +194,9 @@ int main(char* args[]) {
 	printf("\nJAGATIS: %s / %d\n", bitid(jagatis, L), jagatis);
 	printf("   J22K: %s / %d\n\n", bitid(jaak, L), jaak);
 	
+	jaga(19, -8, &jagatis, &jaak, L);
+	printf("\nJAGATIS: %s / %d\n", bitid(jagatis, L), jagatis);
+	printf("   J22K: %s / %d\n\n", bitid(jaak, L), jaak);
 	
 	//for(;getchar()!='\n';);
 	return 0;

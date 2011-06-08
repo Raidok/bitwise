@@ -23,7 +23,10 @@ then
  a=$(gcc jagaja.c 2>&1)
  if [ -z "$a" ]
  then
-  git commit -m "$2"
+  b=$(git commit -m "$2" 2>&1)
+  echo "GIT TEATAB:"
+  echo $b
+  ./a.out
  else
   echo "KOMPILEERUMINE EBAÕNNESTUS:"
   echo $a
