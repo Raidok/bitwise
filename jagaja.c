@@ -131,29 +131,35 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 
 		// vastuse ja jäägi ringnihutamine vasakule
 		if (Rg3 & bit) {
-			if (debug) printf(" paremnihe, ülekanne\n");
+			if (debug) printf(" - j22gi ja vastuse paremnihe, ylekanne vastusest j22ki\n");
 			Rg3 <<= 1;
 			jaak <<= 1;
 			jaak += 1;
 			Rg3 &= ~(bit<<1);
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		} else {
-			if (debug) printf(" paremnihe\n");
+			if (debug) printf(" - j22gi ja vastuse paremnihe\n");
 			Rg3 <<= 1;
 			jaak <<= 1;
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		}
 		
-		if (debug) printf(" liidan jagaja\n");
+		// nullib vaatlusest välja jäänud järgud igaks juhuks ära
+		korista(&Rg3, L);
+		korista(&jaak, L);
+		
+		if (debug) printf(" - liidan j22gile jagaja\n");
 		jaak += Rg2;
 		if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		
 		if (jaak < 0) {
+			if (debug) printf(" - lahutan j22gist jagaja\n");
 			jaak -= Rg2;
-			if (debug) printf(" >jaak : %s (%2d) <<< lahutan jagaja\n\n", bitid(jaak, L), jaak);
+			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		} else {
+			if (debug) printf(" - sean noorima j2rgu k6rgeks\n");
 			Rg3 |= 0x01;
-			if (debug) printf(" > Rg3 : %s (%2d) <<< noorim kõrgeks\n\n", bitid(Rg3, L), Rg3);
+			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		}
 		
 		
@@ -185,11 +191,11 @@ int main(int argc, char *argv[]) {
 	// Esimene algoritm
 	// A1 = -29 = 10 0011 <- täiendkood
 	// B1 =   4 = 00 0100 <- otsekood
-	jaga(29, -4, L, debug);
+	jaga(19, -8, L, debug);
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
-	jaga(19, -8, L, debug);
+	//jaga(19, -8, L, debug);
 	
 	//for(;getchar()!='\n';);
 	return 0;
