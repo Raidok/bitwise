@@ -24,7 +24,7 @@ then
  then
   b=$(./a.out)
   echo $b$2
-  c=$(git commit -a -m "$b$2" 2>&1)
+  c=$(git commit -a -m "$b\n$2" 2>&1)
   echo " --- GIT TEATAB --- "
   echo $c
  else
