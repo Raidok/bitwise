@@ -1,5 +1,5 @@
 #!/bin/bash
-# file.sh: a sample shell script to demonstrate the concept of Bash shell functions
+# a shell script which copiles a file with gcc and if no errors exist, it commits it to git with the output gotten from running the code
 # define usage function
 usage(){
 	echo "Usage: $0 filename"
@@ -19,16 +19,16 @@ is_file_exits(){
 # Invoke is_file_exits
 if ( is_file_exits "$1" )
 then
- echo "File found"
  a=$(gcc jagaja.c 2>&1)
  if [ -z "$a" ]
  then
-  b=$(git commit -a -m "$2" 2>&1)
-  echo "GIT TEATAB:"
-  echo $b
-  ./a.out
+  b=$(./a.out 2>&1)
+  echo $b$2
+  c=$(git commit -a -m "$b$2" 2>&1)
+  echo " --- GIT TEATAB --- "
+  echo $c
  else
-  echo "KOMPILEERUMINE EBAÕNNESTUS:"
+  echo " --- KOMPILEERUMINE EBAÕNNESTUS ---"
   echo $a
  fi
 else

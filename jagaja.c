@@ -104,67 +104,56 @@ void paiguta(char *Rg1, char *Rg2, char L) {
 /**
  * jagamist teostav algoritm
  */
-int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
+int jaga(char Rg1, char Rg2, char L, int debug) {
 	char bit = 0x01<<L-1;
-	char t;
+	char Rg3, jaak=0;
 	int i;
 	
-	// algväärtustamine
-	*Rg3 = 0;
-	*jaak = 0;
-	
-	printf("\n********* JAGATAKSE ARVUD %s / %d JA %s / %d *********\n\n", bitid(Rg1, L), Rg1, bitid(Rg2, L), Rg2);
+	if (debug) printf("\n********* JAGATAKSE ARVUD %s / %d JA %s / %d *********\n\n", bitid(Rg1, L), Rg1, bitid(Rg2, L), Rg2);
 	
 	if (onTaiendkood(Rg1, L) || onTaiendkood(Rg2, L)) {
-		printf("- v2hemalt yks arvudest on t2iendkoodis\n");
-		//*Rg3 = ~0x3f;
+		if (debug) printf("- v2hemalt yks arvudest on t2iendkoodis\n");
 	} else {
-		printf("- m6lemad arvud on otsekoodis\n");
+		if (debug) printf("- m6lemad arvud on otsekoodis\n");
 	}
 	
 	// 1. Sättida Rg1 ja Rg2 vanimad bitid kohakuti.
-	printf("- vastus peaks tulema: %s / %d jääk: %s / %d\n\n", bitid(Rg1/Rg2, L), Rg1/Rg2, bitid(Rg1-Rg1/Rg2*Rg2, L), Rg1-Rg1/Rg2*Rg2);
+	if (debug) printf("- vastus peaks tulema: %s / %d jääk: %s / %d\n\n", bitid(Rg1/Rg2, L), Rg1/Rg2, bitid(Rg1-Rg1/Rg2*Rg2, L), Rg1-Rg1/Rg2*Rg2);
 	//paiguta(&Rg1, &Rg2, L);
-	printf("Rg1 : %s / %d\n", bitid(Rg1, L), Rg1);
-	printf("Rg2 : %s / %d\n", bitid(Rg2, L), Rg2);
-	
-	*Rg3 = Rg1;
-	printf("Rg3 : %s / %d\n\n", bitid(*Rg3, L), *Rg3);
+	if (debug) printf("Rg1 : %s (%2d)\n", bitid(Rg1, L), Rg1);
+	if (debug) printf("Rg2 : %s (%2d)\n", bitid(Rg2, L), Rg2);
+	Rg3 = Rg1;
+	if (debug) printf("Rg3 : %s (%2d)  <- Rg1 koopia\n\n", bitid(Rg3, L), Rg3);
 	
 	for (i = 0; i < L; i++) { // käiakse läbi kõik bitid
 
-		printf("\n ------------ %d. ITERATSIOON ------------\n", i+1);
+		if (debug) printf("\n ------------ %d. ITERATSIOON ------------\n", i+1);
 
 		// vastuse ja jäägi ringnihutamine vasakule
-		if (*Rg3 & bit) {
-			printf(" paremnihe, ülekanne\n");
-			*Rg3 <<= 1;
-			*jaak <<= 1;
-			*jaak += 1;
-			*Rg3 &= ~(bit<<1);
-			printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
+		if (Rg3 & bit) {
+			if (debug) printf(" paremnihe, ülekanne\n");
+			Rg3 <<= 1;
+			jaak <<= 1;
+			jaak += 1;
+			Rg3 &= ~(bit<<1);
+			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		} else {
-			printf(" paremnihe\n");
-			*Rg3 <<= 1;
-			*jaak <<= 1;
-			printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
+			if (debug) printf(" paremnihe\n");
+			Rg3 <<= 1;
+			jaak <<= 1;
+			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		}
 		
-		//*jaak <<= 1;
-		//printf(" >jaak : %s / %d <<< nihe vasakule\n", bitid(*jaak, L), *jaak);
+		if (debug) printf(" liidan jagaja\n");
+		jaak += Rg2;
+		if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		
-		printf(" liidan jagaja\n");
-		*jaak += Rg2;
-		printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
-		
-		if (*jaak < 0) {
-			*jaak -= Rg2;
-			printf(" >jaak : %s (%2d) <<< lahutan jagaja\n", bitid(*jaak, L), *jaak);
+		if (jaak < 0) {
+			jaak -= Rg2;
+			if (debug) printf(" >jaak : %s (%2d) <<< lahutan jagaja\n\n", bitid(jaak, L), jaak);
 		} else {
-			*Rg3 |= 0x01;
-			printf(" > Rg3 : %s (%2d) <<< noorim kõrgeks\n", bitid(*Rg3, L), *Rg3);
-			//*jaak |= 0x01;
-			//printf(" >jaak : %s / %d <<< noorim kõrgeks\n", bitid(*jaak, L), *jaak);
+			Rg3 |= 0x01;
+			if (debug) printf(" > Rg3 : %s (%2d) <<< noorim kõrgeks\n\n", bitid(Rg3, L), Rg3);
 		}
 		
 		
@@ -172,8 +161,11 @@ int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
 	}
 
 	
-	printf("\nJAGATIS: %s / %d\n", bitid(*Rg3, L), *Rg3);
-	printf("   J22K: %s / %d\n\n", bitid(*jaak, L), *jaak);
+	printf("%s (%d) / %s (%d) = %s (%d) r %s (%d)\n", 
+		bitid(Rg1, L), Rg1, 
+		bitid(Rg2, L), Rg2, 
+		bitid(Rg3, L), Rg3,
+		bitid(jaak, L), jaak);
 }
 
 
@@ -181,19 +173,23 @@ int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
 /**
  * peaprogramm
  */
-int main(char* args[]) {
-	char jagatis, jaak, L=6;
+int main(int argc, char *argv[]) {
+
+	char L=6; // bittide arv
+	int debug = FALSE;
 	
-	printf("--------------------------------------------------------------------------------\n");
+	if ( (int)argv[1] ) debug = TRUE;
 	
+	if (debug) printf("--------------------------------------------------------------------------------\n");
+
 	// Esimene algoritm
 	// A1 = -29 = 10 0011 <- täiendkood
 	// B1 =   4 = 00 0100 <- otsekood
-	jaga(13, -5, &jagatis, &jaak, L);
+	jaga(29, -4, L, debug);
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
-	//jaga(19, -8, &jagatis, &jaak, L);
+	jaga(19, -8, L, debug);
 	
 	//for(;getchar()!='\n';);
 	return 0;
