@@ -17,20 +17,19 @@ is_file_exits(){
 [[ $# -eq 0 ]] && usage
  
 # Invoke is_file_exits
-if ( is_file_exits "$1" )
+if ( is_file_exits "$1" ) # if the file (argument 1) didn't exist
 then
- a=$(gcc jagaja.c 2>&1)
- if [ -z "$a" ]
+ a=$(gcc jagaja.c 2>&1) # 2>&1 catches both, STDOUT and STDERR
+ if [ -z "$a" ]	# check if the variable is set, returns true for an empty string too
  then
-  b=$(./a.out)
-  echo $b$2
+  b=$(./a.out) # runs the compiled code
   c=$(git commit -a -m "$b
-  $2" 2>&1)
+$2" 2>&1) # commits with output message followed by argument 2 from the command line
   echo " --- GIT TEATAB --- "
-  echo $c
+  echo $c # git output
  else
   echo " --- KOMPILEERUMINE EBAÕNNESTUS ---"
-  echo $a
+  echo $a #if the compilaton failed, it outputs all
  fi
 else
  echo "File not found"
