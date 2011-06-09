@@ -53,7 +53,7 @@ char *bitid(char Rg, char L) {
 	char bit = 0x01<<L-1;
 	int i;
 	char *bitid;
-	korista(&Rg, L);
+	//korista(&Rg, L);
 	bitid = (char*) malloc(L+1);
 	for (i=0; i < L; i++) {
 		*(bitid+i) = Rg & bit ? '1' : '0';
@@ -105,6 +105,7 @@ void paiguta(char *Rg1, char *Rg2, char L) {
  * jagamist teostav algoritm
  */
 int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
+	char bit = 0x01<<L-1;
 	char t;
 	int i;
 	
@@ -128,28 +129,46 @@ int jaga(char Rg1, char Rg2, char *Rg3, char *jaak, char L) {
 	printf("Rg2 : %s / %d\n", bitid(Rg2, L), Rg2);
 	
 	*Rg3 = Rg1;
+	printf("Rg3 : %s / %d\n\n", bitid(*Rg3, L), *Rg3);
 	
-	for (i = 0; i < 8; i++) { // käiakse läbi kõik bitid
+	for (i = 0; i < L; i++) { // käiakse läbi kõik bitid
 
 		printf("\n ------------ %d. ITERATSIOON ------------\n", i+1);
 
-		if ((*Rg3 & 0x80) != 0) { // kontrollitakse ülekannet q-st r-i
-			*jaak = (*jaak << 1) + 1;
-			printf(" >jaak: %s / %d <<< nihutati vasakule ja lisati ülekanne\n", bitid(*jaak, L), *jaak);
+		// vastuse ja jäägi ringnihutamine vasakule
+		if (*Rg3 & bit) {
+			printf(" paremnihe, ülekanne\n");
+			*Rg3 <<= 1;
+			*jaak <<= 1;
+			*jaak += 1;
+			*Rg3 &= ~(bit<<1);
+			printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
 		} else {
-			*jaak = *jaak << 1; // nihe vasakule ilma ülekandeta
-			printf(" >jaak: %s / %d <<< nihutati vasakule, ülekannet polnud\n", bitid(*jaak, L), *jaak);
+			printf(" paremnihe\n");
+			*Rg3 <<= 1;
+			*jaak <<= 1;
+			printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
 		}
-		*Rg3 <<= 1;
-		printf(" > Rg3 : %s / %d <<< nihutati vasakule\n", bitid(*Rg3, L), *Rg3);
 		
-		if (*jaak >= Rg2) { // test if b can be subtracted from q
+		//*jaak <<= 1;
+		//printf(" >jaak : %s / %d <<< nihe vasakule\n", bitid(*jaak, L), *jaak);
 		
-			*Rg3 = *Rg3 | 0x01; // vastusregistri viimane bit kõrgeks
-			printf(" > Rg3 : %s / %d <<< viimane bit kõrgeks\n", bitid(*Rg3, L), *Rg3);
+		printf(" liidan jagaja\n");
+		*jaak += Rg2;
+		printf(" > %s (%2d) | %s (%2d)\n", bitid(*jaak, L), *jaak, bitid(*Rg3, L), *Rg3);
+		
+		if (*jaak < 0) {
 			*jaak -= Rg2;
-			printf(" >jaak: %s / %d <<< lahutati maha jagaja\n", bitid(*jaak, L), *jaak);
+			printf(" >jaak : %s (%2d) <<< lahutan jagaja\n", bitid(*jaak, L), *jaak);
+		} else {
+			*Rg3 |= 0x01;
+			printf(" > Rg3 : %s (%2d) <<< noorim kõrgeks\n", bitid(*Rg3, L), *Rg3);
+			//*jaak |= 0x01;
+			//printf(" >jaak : %s / %d <<< noorim kõrgeks\n", bitid(*jaak, L), *jaak);
 		}
+		
+		
+		
 	}
 
 	
@@ -170,11 +189,11 @@ int main(char* args[]) {
 	// Esimene algoritm
 	// A1 = -29 = 10 0011 <- täiendkood
 	// B1 =   4 = 00 0100 <- otsekood
-	jaga(29, 4, &jagatis, &jaak, L);
+	jaga(13, -5, &jagatis, &jaak, L);
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
-	jaga(19, 8, &jagatis, &jaak, L);
+	//jaga(19, -8, &jagatis, &jaak, L);
 	
 	//for(;getchar()!='\n';);
 	return 0;
