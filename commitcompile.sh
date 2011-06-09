@@ -22,7 +22,7 @@ then
  a=$(gcc jagaja.c 2>&1) # 2>&1 catches both, STDOUT and STDERR
  if [ -z "$a" ]	# check if the variable is set, returns true for an empty string too
  then
-  b=$(./a.out) # runs the compiled code
+  b=$(./a.out 1) # runs the compiled code
   c=$(git commit -a -m "$b
 $2" 2>&1) # commits with output message followed by argument 2 from the command line
   echo " --- GIT TEATAB --- "

@@ -182,20 +182,21 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 int main(int argc, char *argv[]) {
 
 	char L=6; // bittide arv
-	int debug = FALSE;
+	int debug;
 	
-	if ( (int)argv[1] ) debug = TRUE;
+	if ( (int)argv[1] ) debug = FALSE;
+	else debug = TRUE;
 	
 	if (debug) printf("--------------------------------------------------------------------------------\n");
 
 	// Esimene algoritm
 	// A1 = -29 = 10 0011 <- täiendkood
 	// B1 =   4 = 00 0100 <- otsekood
-	jaga(19, -8, L, debug);
+	//jaga(-29, 4, L, debug);
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
-	//jaga(19, -8, L, debug);
+	jaga(19, -8, L, debug);
 	
 	//for(;getchar()!='\n';);
 	return 0;
