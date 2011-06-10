@@ -70,7 +70,11 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 	if (debug) printf(" - Rg1 : %s (%2d)\n", bitid(Rg1, L), Rg1);
 	if (debug) printf(" - Rg2 : %s (%2d)\n", bitid(Rg2, L), Rg2);
 	Rg3 = Rg1;
-	if (debug) printf(" - Rg3 : %s (%2d)  <- Rg1 koopia\n\n", bitid(Rg3, L), Rg3);
+	if (debug) printf(" - Rg3 : %s (%2d)  <- Rg1 koopia\n", bitid(Rg3, L), Rg3);
+	if (Rg1 < 0) {
+		jaak = 0xff;
+	}
+	if (debug) printf(" - jaak: %s (%2d)  <- j22k peale m2rgi kontrolli\n\n", bitid(jaak, L), jaak);
 	
 	for (i = 0; i < L; i++) { // käiakse läbi kõik bitid
 
