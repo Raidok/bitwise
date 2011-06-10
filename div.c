@@ -52,13 +52,12 @@ int divide(char Rg1, char Rg2) {
         printf(" > %s (%2d) | %s (%2d)\n", bits(r), r, bits(Rg3), Rg3);
 
         if (r >= 0) {
-            printf(" - subtract the divisor\n");
+            printf(" - subtract the divisor and set the lowest bit of Rg3 to 1\n");
             r -= Rg2;
             Rg3 |= 0x01;
             printf(" > %s (%2d) | %s (%2d)\n", bits(r), r, bits(Rg3), Rg3);
         } else {
-            printf(" - set the lowest bit of Rg3 to 1\n");
-            Rg3 &= 0xfe;
+            printf(" - lowest bit of Rg3 stays 0\n");
             printf(" > %s (%2d) | %s (%2d)\n", bits(r), r, bits(Rg3), Rg3);
         }
 
@@ -75,8 +74,8 @@ int divide(char Rg1, char Rg2) {
 
 int main(int argc, char *argv[]) {
 
-    divide(19, -8);
     divide(-29, 4);
+    divide(19, -8);
 
     return 0;
 }

@@ -100,12 +100,12 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 		if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		
 		if (jaak < 0) {
-			if (debug) printf(" - lahutan j22gist jagaja\n");
+			if (debug) printf(" - lahutan j22gist jagaja ja sean noorima j2rgu k6rgeks\n");
 			jaak -= Rg2;
 			Rg3 |= 0x01;
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		} else {
-			if (debug) printf(" - sean noorima j2rgu k6rgeks\n");
+			if (debug) printf(" - Rg3 noorim j2rk j22b madalaks\n");
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		}
 		
@@ -143,7 +143,7 @@ int main(int argc, char *argv[]) {
 	// Esimene algoritm
 	// A1 = -29 = 10 0011 <- täiendkood
 	// B1 =   4 = 00 0100 <- otsekood
-	//jaga(-29, 4, L, debug);
+	jaga(-29, 4, L, debug);
 	
 	// A2 = 19 = 01 0011 <- otsekood
 	// B2 = -8 = 11 1000 <- täiendkood
