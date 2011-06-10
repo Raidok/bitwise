@@ -99,7 +99,7 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 		jaak += Rg2;
 		if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		
-		if (jaak < 0) {
+		if (Rg1 < 0 && Rg2 > 0 && jaak >= 0 || Rg1 > 0 && Rg2 < 0 && jaak < 0) {
 			if (debug) printf(" - lahutan j22gist jagaja ja sean noorima j2rgu k6rgeks\n");
 			jaak -= Rg2;
 			Rg3 |= 0x01;
