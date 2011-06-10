@@ -83,17 +83,16 @@ int jaga(char Rg1, char Rg2, char L, int debug) {
 		// vastuse ja jäägi ringnihutamine vasakule
 		if (Rg3 & bit) {
 			if (debug) printf(" - j22gi ja vastuse paremnihe, ylekanne vastusest j22ki\n");
-			Rg3 <<= 1;
 			jaak <<= 1;
 			jaak += 1;
 			//Rg3 &= ~(bit<<1);
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		} else {
 			if (debug) printf(" - j22gi ja vastuse paremnihe\n");
-			Rg3 <<= 1;
 			jaak <<= 1;
 			if (debug) printf(" > %s (%2d) | %s (%2d)\n", bitid(jaak, L), jaak, bitid(Rg3, L), Rg3);
 		}
+		Rg3 <<= 1;
 		
 		if (debug) printf(" - liidan j22gile jagaja\n");
 		jaak += Rg2;

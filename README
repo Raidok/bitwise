@@ -1,2 +1,3 @@
-a binary divider algorithm
+a binary divider algorithm which has to divide signed values directly without taking the absolute value of them
+it is a homework from school
 comments are in estonian, sorry
